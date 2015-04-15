@@ -1,0 +1,69 @@
+{% extends "backbone.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Welcome to TinyTags!</h1>
+            <p>We have made a collection of 80 million tiny images searchable using a Random Forests algorithm for image recognition for tagging.</p>
+            <p> There are ten available tags to search: airplane, automobile, bird, cat, deer, dog, frog, horse, ship and truck. Type a search into the search box above or click one of the category boxes to get started!</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6 col-md-1">
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/automobile.png') }}" alt="automobile">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/bird.png') }}" alt="bird">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/cat.png') }}" alt="cat">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/deer.png') }}" alt="deer">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/dog.png') }}" alt="dog">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/frog.png') }}" alt="frog">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/horse.png') }}" alt="horse">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/ship.png') }}" alt="ship">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+            <a href="#" class="thumbnail">
+                <img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck">
+            </a>
+        </div>
+        <div class="col-xs-6 col-md-1">
+        </div>
+    </div>
+
+{% endblock %}
