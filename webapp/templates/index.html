@@ -1,31 +1,43 @@
 {% extends "backbone.html" %}
 {% block title %}Index{% endblock %}
 {% block content %}
-    <div class="jumbotron">
-        <div class="container">
-            <h1>Welcome to TinyTags!</h1>
-            <p>We have made a collection of 80 million tiny images searchable using a Random Forests algorithm for image recognition for tagging.</p>
-            <p> There are ten available tags to search: airplane, automobile, bird, cat, deer, dog, frog, horse, ship and truck. Type a search into the search box above or click one of the category boxes to get started!</p>
-        </div>
-    </div>
-
     <div class="row">
-        <div class="col-xs-6 col-md-1">
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/automobile.png') }}" alt="automobile">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/bird.png') }}" alt="bird">
-            </a>
+        <div class="col-md-4">
+            <div id="searchpanel" class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Search for Tiny Images</h3></div>
+                <div class="panel-body">
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <b class="col-md-2" style="margin-left: 2px">30%</b>
+                            <div class="col-md-8" style="margin-left: -7px">
+                                <input id="slider" type="text" class="span2" value="" data-slider-min="30" data-slider-max="100" data-slider-step="5" data-slider-value="[10,100]"/>
+                            </div>
+                            <b class="col-md-2" style="margin-left: -3px">100%</b>
+                        </div>
+                        
+                        <div class="form-group">
+                            <select class="selectpicker col-md-12" multiple>
+                                <option>airplane</option>
+                                <option>automobile</option>
+                                <option>bird</option>
+                                <option>cat</option>
+                                <option>deer</option>
+                                <option>dog</option>
+                                <option>frog</option>
+                                <option>horse</option>
+                                <option>ship</option>
+                                <option>truck</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" style="margin-right: 14px" class="btn btn-primary col-md-4 pull-right">Search</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
         <div class="col-xs-6 col-md-1">
             <a href="#" class="thumbnail">
@@ -62,8 +74,15 @@
                 <img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck">
             </a>
         </div>
-        <div class="col-xs-6 col-md-1">
-        </div>
-    </div>
+    </div> <!-- END ROW -->
 
+{% endblock %}
+
+{% block footer %}
+    <script>
+        $(document).ready(function() {
+            var slider = new Slider('#slider', {});
+        });
+
+    </script>
 {% endblock %}
