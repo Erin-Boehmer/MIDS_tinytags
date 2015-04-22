@@ -1,5 +1,5 @@
 # import the Flask class from the flask module
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 
 # create the application object
 app = Flask(__name__)
@@ -10,9 +10,12 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/welcome')
-def welcome():
-    return render_template('welcome.html')  # render a template
+@app.route('/query', methods=['POST'])
+def query():
+    query = ""
+    print request.json["accuracies"]
+    print request.json["tags"]
+    return(jsonify(request.json))
 
 # start the server with the 'run()' method
 if __name__ == '__main__':

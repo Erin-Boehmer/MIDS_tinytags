@@ -7,17 +7,19 @@
                 <div class="panel-heading"><h3 class="panel-title">Search for Tiny Images</h3></div>
                 <div class="panel-body">
 
-                    <form class="form-horizontal">
+                    <form id="query_form" class="form-horizontal">
                         <div class="form-group">
-                            <b class="col-md-2" style="margin-left: 2px">30%</b>
+                            <label class="col-md-12" for="slider">Accuracy of Tag:</label>
+                            <div class="col-md-2" style="margin-left: 2px">30%</div>
                             <div class="col-md-8" style="margin-left: -7px">
                                 <input id="slider" type="text" class="span2" value="" data-slider-min="30" data-slider-max="100" data-slider-step="5" data-slider-value="[10,100]"/>
                             </div>
-                            <b class="col-md-2" style="margin-left: -3px">100%</b>
+                            <div class="col-md-2" style="margin-left: -3px">100%</div>
                         </div>
                         
                         <div class="form-group">
-                            <select class="selectpicker col-md-12" multiple>
+                            <label class="col-md-12" for="multiselect">Tag Category:</label>
+                            <select id="multiselect" class="selectpicker col-md-12" multiple>
                                 <option>airplane</option>
                                 <option>automobile</option>
                                 <option>bird</option>
@@ -32,57 +34,54 @@
                         </div>
                         
                         <div class="form-group">
-                            <button type="submit" style="margin-right: 14px" class="btn btn-primary col-md-4 pull-right">Search</button>
+                            <button id="query_button" type="button" style="margin-right: 14px" class="btn btn-primary col-md-4 pull-right">Search</button>
                         </div>
                     </form>
 
                 </div>
             </div>
         </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/cat.png') }}" alt="cat">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/deer.png') }}" alt="deer">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/dog.png') }}" alt="dog">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/frog.png') }}" alt="frog">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/horse.png') }}" alt="horse">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/ship.png') }}" alt="ship">
-            </a>
-        </div>
-        <div class="col-xs-6 col-md-1">
-            <a href="#" class="thumbnail">
-                <img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck">
-            </a>
-        </div>
-    </div> <!-- END ROW -->
+        <div class="col-md-8">
+            <div class="row">
+            <span id="image_results">
+                <!-- TEMPLATE -->
+                <!-- <div class="col-md-2">
+                    <div class="thumbnail">
+                        <img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck">
+                        <center><h5>TRUCK, 48%</h5></center>
+                    </div>
+                </div> -->
+            </span>
+            </div> <!-- END INDIVIDUAL IMAGE ROW -->
+        </div> <!-- END IMAGE RESULTS COLUMN -->
+    </div> <!-- END MAIN PAGE ROW -->
 
 {% endblock %}
 
 {% block footer %}
     <script>
+        var slider = null;
         $(document).ready(function() {
-            var slider = new Slider('#slider', {});
+            slider = new Slider('#slider', {});
         });
 
+        $(function() {
+            $("button#query_button").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "/query",
+                    contentType: 'application/json',
+                    dataType:"json",
+                    data: JSON.stringify({
+                        "tags":$('.selectpicker').val(),
+                        "accuracies":slider.getValue()
+                        }),
+                    success: function(msg) {
+                            $('span#image_results').html(JSON.stringify(msg));
+                        },
+                    error: function() { alert("failure"); } 
+                });
+            });
+        });
     </script>
 {% endblock %}
