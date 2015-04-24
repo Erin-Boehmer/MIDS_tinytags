@@ -77,7 +77,68 @@
                         "accuracies":slider.getValue()
                         }),
                     success: function(msg) {
-                            $('span#image_results').html(JSON.stringify(msg));
+                            //console.log(msg.images[0].data)
+                            //json_response = JSON.stringify(msg);
+                            
+                                tag_lookup = {
+                                    "0":"airplane",
+                                    "1":"automobile",
+                                    "2":"bird",
+                                    "3":"cat",
+                                    "4":"deer",
+                                    "5":"dog",
+                                    "6":"frog",
+                                    "7":"horse",
+                                    "8":"ship",
+                                    "9":"truck" 
+                                }
+
+                            var html_response = "";   
+                            for (image_index in msg.images) {
+                                image = msg.images[image_index]
+                                html_response = html_response +
+                                '<div class="col-md-3">' +
+                                    '<div class="text-center thumbnail">' +
+                                        '<canvas id="' + image_index + '" width="32" height="32" class="rotate90">Your browser does not support the HTML5 canvas tag.</canvas>' +
+                                        '<center><h5>'+tag_lookup[image.label_i] + ', ' + (image.num_tree_i*10) + '%</h5></center>' +
+                                    '</div>' +
+                                '</div>'
+                            }                        
+                            $('span#image_results').html(html_response);
+                            
+                            console.log("# images");
+                            console.log(msg.images.length);
+                            for(var i=0; i < msg.images.length; i++) {
+                                pixel_data = msg.images[i].data;
+
+                                var canvas = document.getElementById(i);
+                                var ctx = canvas.getContext('2d');
+                                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                                var buf = new ArrayBuffer(imageData.data.length);
+                                var buf8 = new Uint8ClampedArray(buf);
+                                var data = new Uint32Array(buf);
+                                
+                                for (var y = 0; y < canvas.height; ++y) {
+                                    for (var x = 0; x < canvas.width; ++x) {
+                                        img_index = y*canvas.width + x;
+                                        pixel_index = img_index*4;
+                                        if (x==1 && y==0) {
+                                            console.log(pixel_data[pixel_index+3]);
+                                            console.log(pixel_data);
+                                        }
+                                        data[img_index] =
+                                            (255   << 24) |    // alpha
+                                            (pixel_data[pixel_index+2] << 16) |    // blue
+                                            (pixel_data[pixel_index+1] <<  8) |    // green
+                                             pixel_data[pixel_index];            // red
+                                    }
+                                }
+
+                                imageData.data.set(buf8);
+
+                                ctx.putImageData(imageData, 0, 0);
+                            }
                         },
                     error: function() { alert("failure"); } 
                 });

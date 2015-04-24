@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, jsonify, make_response
 import solr
+import numpy as np
 import random
 import StringIO
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+
 
 # create the application object
 app = Flask(__name__)
@@ -32,43 +34,41 @@ def query():
         "ship":"8",
         "truck":"9" }
     tag_str = ""
-    for tag in request.json['tags']:
-        if(tag_str == ""):
-            tag_str = tag_lookup[str(tag)]
-        else:
-            tag_str = "%s OR %s" % (tag_str, tag_lookup[str(tag)])
-    
+    if request.json['tags']:
+        for tag in request.json['tags']:
+            if(tag_str == ""):
+                tag_str = tag_lookup[str(tag)]
+            else:
+                tag_str = "%s OR %s" % (tag_str, tag_lookup[str(tag)])
+    # if tag_str is not blank, finalize for addition to the query
+    if tag_str is not "":
+        tag_str = "label_i:(%s) AND" % (tag_str)    
+      
+
     # create the query string for accuracy
     low_acc = int(request.json['accuracies'][0])/10
     high_acc = int(request.json['accuracies'][1])/10
     accuracy_str = 'num_tree_i:[%d TO %d]' % (low_acc, high_acc)
     
     # create the filter query and submit to solr
-    fq_str = "label_i:(%s) AND %s" % (tag_str, accuracy_str)
+    fq_str = "%s %s" % (tag_str, accuracy_str)
     response = s.query('*:*', fq=fq_str)
     
     # create the image json response 
     data = {"images": []}
     for hit in response.results:
-        image = {"data":hit['data'], "label_i":hit['label_i'], "num_tree_i":hit['num_tree_i']}
+        # getting the json response data in the right format
+        pixel_data = str(hit['data'])
+        pixel_data = pixel_data[1:-1].split(",")
+        clean_data = np.asarray([(int(x)) for x in pixel_data])
+        html_ready_pixels = clean_data.reshape(3,1024).swapaxes(0,1)    
+        html_ready_pixels = np.c_[html_ready_pixels, np.zeros(html_ready_pixels.shape[0])].flatten().tolist()
+        
+        # create the json return object
+        image = {"data":html_ready_pixels, "label_i":hit['label_i'], "num_tree_i":hit['num_tree_i']}
         data["images"].append(image)
+    
     return(jsonify(data))
 
-@app.route('/plot.png')
-def plot():
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
- 
-    xs = range(100)
-    ys = [random.randint(1, 50) for x in xs]
- 
-    axis.plot(xs, ys)
-    canvas = FigureCanvas(fig)
-    output = StringIO.StringIO()
-    canvas.print_png(output)
-    response = make_response(output.getvalue())
-    response.mimetype = 'image/png'
-    return response
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0') #externally visible (use debug=True to make private)
