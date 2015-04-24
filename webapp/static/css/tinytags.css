@@ -4,4 +4,8 @@
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
+    margin-bottom: 5px;
+}
+.move-up {
+    margin-top:-5px;
 }

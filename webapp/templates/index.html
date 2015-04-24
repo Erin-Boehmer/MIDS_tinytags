@@ -34,7 +34,10 @@
                         </div>
                         
                         <div class="form-group">
-                            <button id="query_button" type="button" style="margin-right: 14px" class="btn btn-primary col-md-4 pull-right">Search</button>
+                            <button id="query_button" type="button" style="margin-right: 14px" class="btn btn-primary col-md-5 pull-right">Search</button>
+                            <button id="refresh" type="button" style="margin-right:5px" class="btn btn-danger pull-right col-md-2" aria-label="Reset">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                            </button>
                         </div>
                     </form>
 
@@ -44,13 +47,23 @@
         <div class="col-md-8">
             <div class="row">
             <span id="image_results">
-                <!-- TEMPLATE -->
-                <div class="col-md-2">
-                    <div class="thumbnail">
-                        <img src="/plot.png" alt="truck">
-                        <center><h5>TRUCK, 48%</h5></center>
-                    </div>
-                </div>
+                <div class="jumbotron">
+                    <h1>Welcome to TinyTags!</h1>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/automobile.png') }}" alt="automobile"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/bird.png') }}" alt="bird"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/cat.png') }}" alt="cat"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/deer.png') }}" alt="deer"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/dog.png') }}" alt="dog"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/frog.png') }}" alt="frog"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/horse.png') }}" alt="horse"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/ship.png') }}" alt="ship"></div>
+                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck"></div>
+                    </div><br>
+                    <p>Use the search panel to get started searching for tagged images within the MIT datastore of 80 million tiny images.</p>
+                </div>               
             </span>
             </div> <!-- END INDIVIDUAL IMAGE ROW -->
         </div> <!-- END IMAGE RESULTS COLUMN -->
@@ -66,6 +79,12 @@
         });
 
         $(function() {
+            $("button#refresh").click(function() {     
+                $('.selectpicker').selectpicker('deselectAll');
+            });
+        });
+
+        $(function() {
             $("button#query_button").click(function() {
                 $.ajax({
                     type: "POST",
@@ -77,9 +96,6 @@
                         "accuracies":slider.getValue()
                         }),
                     success: function(msg) {
-                            //console.log(msg.images[0].data)
-                            //json_response = JSON.stringify(msg);
-                            
                                 tag_lookup = {
                                     "0":"airplane",
                                     "1":"automobile",
@@ -97,17 +113,16 @@
                             for (image_index in msg.images) {
                                 image = msg.images[image_index]
                                 html_response = html_response +
-                                '<div class="col-md-3">' +
+                                '<div class="col-md-2">' +
                                     '<div class="text-center thumbnail">' +
-                                        '<canvas id="' + image_index + '" width="32" height="32" class="rotate90">Your browser does not support the HTML5 canvas tag.</canvas>' +
-                                        '<center><h5>'+tag_lookup[image.label_i] + ', ' + (image.num_tree_i*10) + '%</h5></center>' +
+                                        '<canvas id="' + image_index + '" width="32" height="32" class="rotate90 col-md-12">Your browser does not support the HTML5 canvas tag.</canvas>' +
+                                        '<center><h5 class="text-primary">'+tag_lookup[image.label_i].toUpperCase() + '</h5></center>' +
+                                        '<center><h5 class="move-up">'+ (image.num_tree_i*10) + '%</h5></center>' +
                                     '</div>' +
                                 '</div>'
                             }                        
                             $('span#image_results').html(html_response);
                             
-                            console.log("# images");
-                            console.log(msg.images.length);
                             for(var i=0; i < msg.images.length; i++) {
                                 pixel_data = msg.images[i].data;
 
@@ -128,10 +143,10 @@
                                             console.log(pixel_data);
                                         }
                                         data[img_index] =
-                                            (255   << 24) |    // alpha
+                                            (255   << 24) |                        // alpha
                                             (pixel_data[pixel_index+2] << 16) |    // blue
                                             (pixel_data[pixel_index+1] <<  8) |    // green
-                                             pixel_data[pixel_index];            // red
+                                             pixel_data[pixel_index];              // red
                                     }
                                 }
 

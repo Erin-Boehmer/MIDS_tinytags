@@ -52,7 +52,7 @@ def query():
     
     # create the filter query and submit to solr
     fq_str = "%s %s" % (tag_str, accuracy_str)
-    response = s.query('*:*', fq=fq_str)
+    response = s.query('*:*', fq=fq_str, rows=30)
     
     # create the image json response 
     data = {"images": []}
