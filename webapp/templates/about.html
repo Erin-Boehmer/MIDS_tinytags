@@ -1,0 +1,52 @@
+{% extends "backbone.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
+<div class="row">
+    <center><h1><em>TinyTags</em> is a final project created by</h1></center>
+</div>
+<ul class="photo-grid">
+    <li>
+        <a href="http://www.ischool.berkeley.edu/people/students/zacharybeaver">
+            <figure>
+                <img src="{{ url_for('static', filename='img/zach.png') }}" height="170" width="170">
+                <figcaption><p>Zach</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li>
+        <a href="http://www.ischool.berkeley.edu/people/students/erinboehmer">
+            <figure>
+                <img src="{{ url_for('static', filename='img/erin.jpg') }}" height="170" width="170">
+                <figcaption><p>Erin</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li><a href="http://www.ischool.berkeley.edu/people/students/nitinkohli">
+            <figure>
+                <img src="{{ url_for('static', filename='img/nitin.jpg') }}" height="170" width="170">
+                <figcaption><p>Nitin</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li><a href="http://www.ischool.berkeley.edu/people/students/sharonlin">
+            <figure>
+                <img src="{{ url_for('static', filename='img/sharon.jpg') }}" height="170" width="170">
+                <figcaption><p>Sharon</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li><a href="http://www.ischool.berkeley.edu/people/students/kunalshah">
+            <figure>
+                <img src="{{ url_for('static', filename='img/kunal.jpg') }}" height="170" width="170">
+                <figcaption><p>Kunal</p></figcaption>
+            </figure>
+        </a>
+    </li>
+</ul>
+
+<center><p class="lead">for the <a href="http://datascience.berkeley.edu/academics/curriculum/really-big-data/">Scaling Up! Really Big Data</a> course in the UC Berkeley Master of Information and Data Science program.<br> Check out the <a href="https://github.com/Erin-Boehmer/MIDS_tinytags">source code</a> on Github!</p></center>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

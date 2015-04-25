@@ -2,10 +2,6 @@
     margin-top: -10px;
 }
 
-.team-photos {
-    background-color: #eee;
-}
-
 .rotate90 {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -19,33 +15,34 @@
     margin-top:-5px;
 }
 
-/* code for about page effects */
+
+
 .photo-grid {
     margin: 1em auto;
     max-width: 1106px;
     text-align: center;
 }
- 
+
 .photo-grid li {
-    border: 5px solid white;
+    border: 5px solid #2a2728;
     display: inline-block;
     margin: 1em;
     width: 180px;
 }
- 
+
 .photo-grid img {
     display: block;
     height: auto;
     max-width: 100%;
 }
- 
+
 .photo-grid figure {
     height: 163px;
     overflow: hidden;
     position: relative;
     width: 170px;
 }
- 
+
 .photo-grid figcaption {
     background: rgba(0,0,0,0.8);
     color: white;
@@ -58,7 +55,7 @@
     top: 0;
     z-index: 100;
 }
- 
+
 .photo-grid figcaption p {
     display: table-cell;
     font-size: 1.5em;
@@ -80,11 +77,29 @@
     transition: all 300ms;
     max-width: 100%;
 }
- 
+
 .photo-grid li:hover img {
     -webkit-transform: scale(1.4);
     -moz-transform: scale(1.4);
     transform: scale(1.4);
+}
+
+.photo-grid figcaption p {
+    display: table-cell;
+    font-size: 1.5em;
+    position: relative;
+    top: -40px;
+    width: 289px;
+    -webkit-transition: all 300ms ease-out;
+    -moz-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+    vertical-align: middle;
+}
+
+.photo-grid li:hover figcaption p {
+    -moz-transform: translateY(40px);
+    -webkit-transform: translateY(40px);
+    transform: translateY(40px);
 }
 
 .photo-grid figcaption {
