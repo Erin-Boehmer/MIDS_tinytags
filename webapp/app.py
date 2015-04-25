@@ -19,6 +19,10 @@ s = solr.SolrConnection('http://localhost:8983/solr/TinyImages_shard2_replica1')
 def home():
     return render_template('index.html')
 
+@app.route('/about.html')
+def about():
+    return render_template('about.html')
+
 @app.route('/query', methods=['POST'])
 def query():
     # create the query string for tags

@@ -50,16 +50,15 @@
                 <div class="jumbotron">
                     <h1>Welcome to TinyTags!</h1>
                     <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/automobile.png') }}" alt="automobile"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/bird.png') }}" alt="bird"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/cat.png') }}" alt="cat"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/deer.png') }}" alt="deer"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/dog.png') }}" alt="dog"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/frog.png') }}" alt="frog"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/horse.png') }}" alt="horse"></div>
-                        <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/ship.png') }}" alt="ship"></div>
+                        <div style="margin-right: 5px; margin-left: 20px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/automobile.png') }}" alt="automobile"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/bird.png') }}" alt="bird"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/cat.png') }}" alt="cat"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/deer.png') }}" alt="deer"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/dog.png') }}" alt="dog"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/frog.png') }}" alt="frog"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/horse.png') }}" alt="horse"></div>
+                        <div style="margin-right: 5px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/ship.png') }}" alt="ship"></div>
                         <div class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/truck.png') }}" alt="truck"></div>
                     </div><br>
                     <p>Use the search panel to get started searching for tagged images within the MIT datastore of 80 million tiny images.</p>
@@ -85,7 +84,9 @@
         });
 
         $(function() {
-            $("button#query_button").click(function() {
+            $("#query_button").click(function() {
+                $('span#image_results').html('<br><br><center><div class="heartbeat">Loading...</div></center>');
+
                 $.ajax({
                     type: "POST",
                     url: "/query",
@@ -138,10 +139,6 @@
                                     for (var x = 0; x < canvas.width; ++x) {
                                         img_index = y*canvas.width + x;
                                         pixel_index = img_index*4;
-                                        if (x==1 && y==0) {
-                                            console.log(pixel_data[pixel_index+3]);
-                                            console.log(pixel_data);
-                                        }
                                         data[img_index] =
                                             (255   << 24) |                        // alpha
                                             (pixel_data[pixel_index+2] << 16) |    // blue
