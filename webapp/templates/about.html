@@ -5,46 +5,64 @@
     <center><h1><em>TinyTags</em> is a final project created by</h1></center>
 </div>
 <ul class="photo-grid">
-    <li>
-        <a href="http://www.ischool.berkeley.edu/people/students/zacharybeaver">
-            <figure>
-                <img src="{{ url_for('static', filename='img/zach.png') }}" height="170" width="170">
-                <figcaption><p>Zach</p></figcaption>
-            </figure>
-        </a>
-    </li>
-    <li>
-        <a href="http://www.ischool.berkeley.edu/people/students/erinboehmer">
+    <li><a href="https://www.linkedin.com/in/erinboehmer" target="_blank">
             <figure>
                 <img src="{{ url_for('static', filename='img/erin.jpg') }}" height="170" width="170">
                 <figcaption><p>Erin</p></figcaption>
             </figure>
         </a>
     </li>
-    <li><a href="http://www.ischool.berkeley.edu/people/students/nitinkohli">
-            <figure>
-                <img src="{{ url_for('static', filename='img/nitin.jpg') }}" height="170" width="170">
-                <figcaption><p>Nitin</p></figcaption>
-            </figure>
-        </a>
-    </li>
-    <li><a href="http://www.ischool.berkeley.edu/people/students/sharonlin">
-            <figure>
-                <img src="{{ url_for('static', filename='img/sharon.jpg') }}" height="170" width="170">
-                <figcaption><p>Sharon</p></figcaption>
-            </figure>
-        </a>
-    </li>
-    <li><a href="http://www.ischool.berkeley.edu/people/students/kunalshah">
+    <li><a href="http://www.ischool.berkeley.edu/people/students/kunalshah" target="_blank">
             <figure>
                 <img src="{{ url_for('static', filename='img/kunal.jpg') }}" height="170" width="170">
                 <figcaption><p>Kunal</p></figcaption>
             </figure>
         </a>
     </li>
+    <li><a href="http://www.ischool.berkeley.edu/people/students/nitinkohli" target="_blank">
+            <figure>
+                <img src="{{ url_for('static', filename='img/nitin.jpg') }}" height="170" width="170">
+                <figcaption><p>Nitin</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li><a href="https://www.linkedin.com/in/sharonxlin" target="_blank">
+            <figure>
+                <img src="{{ url_for('static', filename='img/sharon.jpg') }}" height="170" width="170">
+                <figcaption><p>Sharon</p></figcaption>
+            </figure>
+        </a>
+    </li>
+    <li><a href="http://www.ischool.berkeley.edu/people/students/zacharybeaver" target="_blank">
+            <figure>
+                <img src="{{ url_for('static', filename='img/zach.png') }}" height="170" width="170">
+                <figcaption><p>Zach</p></figcaption>
+            </figure>
+        </a>
+    </li>
+
 </ul>
 
-<center><p class="lead">for the <a href="http://datascience.berkeley.edu/academics/curriculum/really-big-data/">Scaling Up! Really Big Data</a> course in the UC Berkeley Master of Information and Data Science program.<br> Check out the <a href="https://github.com/Erin-Boehmer/MIDS_tinytags">source code</a> on Github!</p></center>
+<div class="row">
+<div class="col-md-1"></div>
+<div class="col-md-10">
+<center><p class="lead">for the <a href="http://datascience.berkeley.edu/academics/curriculum/really-big-data/" target="_blank">Scaling Up! Really Big Data</a> course in the UC Berkeley Master of Information and Data Science program. Check out the <a href="https://github.com/Erin-Boehmer/MIDS_tinytags" target="_blank">source code</a> on Github!</p></center>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-3"></div>
+<div class="col-md-6">
+<p>TinyTags allows you to easily search the <a href="http://horatio.cs.nyu.edu/mit/tiny/data/index.html" target="_blank">80 million tiny images dataset</a> provided by MIT and NYU using a set of predefined tags and derived accuracy scores. These tags are obtained from the smaller 60,000 <a href="http://www.cs.toronto.edu/~kriz/cifar.html" target="_blank">CIFAR-10</a> dataset that provides 32x32 color images labeled as "deer", "automobile", "truck", "cat", "dog", "bird", "airplane", "ship", "frog", and "horse".  
+</p>
+<p>
+In order to build TinyTags, we trained a distributed Random Forests machine learning algorithm using <a href="https://spark.apache.org/docs/1.2.1/mllib-guide.html" target="_blank">Spark MLlib</a> using the CIFAR-10 data. The 230 GB of tiny images data, stored in HDFS, was then passed through our classifier to derive the most-likely tag prediction for each image. We then used Solr to index the imagery data so that the tagged images could be made searchable through the TinyTags webapp.
+</p>
+<p>
+We hope you enjoy using TinyTags! For a more detailed description of the TinyTags project, please check out our <a href="https://docs.google.com/document/d/1rZvXK4HPYFSG-h5-H2tmdaEg9C9LiXay2vE6HWoRJhc/edit?usp=sharing" target="_blank">white paper</a>.
+</p>
+</div>
+</div>
 {% endblock %}
 
 {% block footer %}
