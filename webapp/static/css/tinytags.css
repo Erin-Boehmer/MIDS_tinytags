@@ -15,7 +15,17 @@
     margin-top:-5px;
 }
 
+a#previous .disabled
 
+a#previous {
+    cursor: hand;
+    cursor: pointer;
+}
+
+a#next {
+    cursor: hand;
+    cursor: pointer;
+}
 
 .photo-grid {
     margin: 1em auto;

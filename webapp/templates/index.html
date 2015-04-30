@@ -45,9 +45,9 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="row">
+            <div style="margin-top:-20px" class="row">
             <span id="image_results">
-                <div class="jumbotron">
+                <div style="margin-top: 20px" class="jumbotron">
                     <h1>Welcome to TinyTags!</h1>
                     <div class="row">
                         <div style="margin-right: 5px; margin-left: 20px;" class="thumbnail col-md-1"><img src="{{ url_for('static', filename='img/airplane.png') }}" alt="airplane"></div>
@@ -72,6 +72,12 @@
 
 {% block footer %}
     <script>
+        var query_params = {
+            "accuracies": [],
+            "tags": {},
+            "cur_page": 0
+        }
+
         var slider = null;
         $(document).ready(function() {
             slider = new Slider('#slider', {});
@@ -83,9 +89,125 @@
             });
         });
 
+        function show_results(msg) {
+            var tag_lookup = {
+                "0":"airplane",
+                "1":"automobile",
+                "2":"bird",
+                "3":"cat",
+                "4":"deer",
+                "5":"dog",
+                "6":"frog",
+                "7":"horse",
+                "8":"ship",
+                "9":"truck" 
+            };
+
+            var html_response = "";   
+            for (var image_index in msg.images) {
+                var image = msg.images[image_index]
+                html_response = html_response +
+                '<div id="image" class="col-md-2">' +
+                    '<div class="text-center thumbnail">' +
+                        '<canvas id="' + image_index + '" width="32" height="32" class="rotate90 col-md-12">Your browser does not support the HTML5 canvas tag.</canvas>' +
+                        '<center><h5 class="text-primary">'+tag_lookup[image.label_i].toUpperCase() + '</h5></center>' +
+                        '<center><h5 class="move-up">'+ (image.num_tree_i*10) + '%</h5></center>' +
+                    '</div>' +
+                '</div>'
+            }   
+
+            var previous_string = "";                     
+            if(query_params.cur_page == 0) {
+                previous_string = '<li class="previous disabled" onclick="previous(0)"><a id="previous"><span aria-hidden="true">&larr;</span> Previous</a></li>';
+            } else {
+                previous_string = '<li class="previous" onclick="previous(' + (query_params.cur_page - 1) + ')"><a id="previous"><span aria-hidden="true">&larr;</span> Previous</a></li>';
+            }
+            
+            html_response = html_response + 
+                '<nav>' +
+                  '<ul class="pager">' + previous_string +
+                   '<li class="next" onclick="next(' + (query_params.cur_page+1)  + ')"><a id="next">Next <span aria-hidden="true">&rarr;</span></a></li>' +
+                  '</ul>' +
+                '</nav>';
+            $('span#image_results').html(html_response);
+            
+            for(var i=0; i < msg.images.length; i++) {
+                var pixel_data = msg.images[i].data;
+
+                var canvas = document.getElementById(i);
+                var ctx = canvas.getContext('2d');
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                var buf = new ArrayBuffer(imageData.data.length);
+                var buf8 = new Uint8ClampedArray(buf);
+                var data = new Uint32Array(buf);
+                
+                for (var y = 0; y < canvas.height; ++y) {
+                    for (var x = 0; x < canvas.width; ++x) {
+                        var img_index = y*canvas.width + x;
+                        var pixel_index = img_index*4;
+                        data[img_index] =
+                            (255   << 24) |                        // alpha
+                            (pixel_data[pixel_index+2] << 16) |    // blue
+                            (pixel_data[pixel_index+1] <<  8) |    // green
+                             pixel_data[pixel_index];              // red
+                    }
+                }
+
+                imageData.data.set(buf8);
+
+                ctx.putImageData(imageData, 0, 0);
+            }
+        }
+
+        function previous(page) {
+            if(query_params.cur_page != 0) {
+                $('span#image_results').html('<br><br><center><div class="heartbeat">Loading...</div></center>');
+                $.ajax({
+                    type: "POST",
+                    url: "/query",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "tags": query_params.tags,
+                        "accuracies":query_params.accuracies,
+                        "page": page        
+                        }),
+                    success: function(msg) {
+                        query_params.cur_page = query_params.cur_page - 1;
+                        show_results(msg);
+                    },
+                    failure: function() { alert("Failure"); }
+                });
+            }   
+        }
+        
+        function next(page) {
+            $('span#image_results').html('<br><br><center><div class="heartbeat">Loading...</div></center>');
+             $.ajax({
+                type: "POST",
+                url: "/query",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    "tags": query_params.tags,
+                    "accuracies":query_params.accuracies,
+                    "page": page        
+                    }),
+                success: function(msg) {
+                    query_params.cur_page = query_params.cur_page + 1;
+                    show_results(msg);
+                },
+                failure: function() { alert("Failure"); }
+             });
+        }
+
         $(function() {
             $("#query_button").click(function() {
                 $('span#image_results').html('<br><br><center><div class="heartbeat">Loading...</div></center>');
+                
+                query_params.accuracies = slider.getValue();
+                query_params.tags = $('.selectpicker').val();
 
                 $.ajax({
                     type: "POST",
@@ -94,63 +216,12 @@
                     dataType:"json",
                     data: JSON.stringify({
                         "tags":$('.selectpicker').val(),
-                        "accuracies":slider.getValue()
+                        "accuracies":slider.getValue(),
+                        "page": 0
                         }),
                     success: function(msg) {
-                                tag_lookup = {
-                                    "0":"airplane",
-                                    "1":"automobile",
-                                    "2":"bird",
-                                    "3":"cat",
-                                    "4":"deer",
-                                    "5":"dog",
-                                    "6":"frog",
-                                    "7":"horse",
-                                    "8":"ship",
-                                    "9":"truck" 
-                                }
-
-                            var html_response = "";   
-                            for (image_index in msg.images) {
-                                image = msg.images[image_index]
-                                html_response = html_response +
-                                '<div class="col-md-2">' +
-                                    '<div class="text-center thumbnail">' +
-                                        '<canvas id="' + image_index + '" width="32" height="32" class="rotate90 col-md-12">Your browser does not support the HTML5 canvas tag.</canvas>' +
-                                        '<center><h5 class="text-primary">'+tag_lookup[image.label_i].toUpperCase() + '</h5></center>' +
-                                        '<center><h5 class="move-up">'+ (image.num_tree_i*10) + '%</h5></center>' +
-                                    '</div>' +
-                                '</div>'
-                            }                        
-                            $('span#image_results').html(html_response);
-                            
-                            for(var i=0; i < msg.images.length; i++) {
-                                pixel_data = msg.images[i].data;
-
-                                var canvas = document.getElementById(i);
-                                var ctx = canvas.getContext('2d');
-                                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-                                var buf = new ArrayBuffer(imageData.data.length);
-                                var buf8 = new Uint8ClampedArray(buf);
-                                var data = new Uint32Array(buf);
-                                
-                                for (var y = 0; y < canvas.height; ++y) {
-                                    for (var x = 0; x < canvas.width; ++x) {
-                                        img_index = y*canvas.width + x;
-                                        pixel_index = img_index*4;
-                                        data[img_index] =
-                                            (255   << 24) |                        // alpha
-                                            (pixel_data[pixel_index+2] << 16) |    // blue
-                                            (pixel_data[pixel_index+1] <<  8) |    // green
-                                             pixel_data[pixel_index];              // red
-                                    }
-                                }
-
-                                imageData.data.set(buf8);
-
-                                ctx.putImageData(imageData, 0, 0);
-                            }
+                            query_params.cur_page = 0;
+                            show_results(msg);
                         },
                     error: function() { alert("failure"); } 
                 });

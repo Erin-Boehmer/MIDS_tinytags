@@ -54,9 +54,17 @@ def query():
     high_acc = int(request.json['accuracies'][1])/10
     accuracy_str = 'num_tree_i:[%d TO %d]' % (low_acc, high_acc)
     
+    # find out which "page" of results we're looking for
+    page = 0;
+    if request.json['page']:
+        page = request.json['page']
+        print page
+
     # create the filter query and submit to solr
+    rows_per_page = 30
+    start_result = page * rows_per_page
     fq_str = "%s %s" % (tag_str, accuracy_str)
-    response = s.query('*:*', fq=fq_str, rows=30)
+    response = s.query('*:*', fq=fq_str, rows=rows_per_page, start=start_result)
     
     # create the image json response 
     data = {"images": []}
